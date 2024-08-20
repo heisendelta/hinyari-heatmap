@@ -1,0 +1,7 @@
+- highlight the selected region in region_info/
+- gradient for meaning behind red-yellow colors
+- KDE for time groups
+- ranking for top n most influenced regions (w/ respect to searched region)
+
+- hosting on pythonanywhere.com
+- English translation
