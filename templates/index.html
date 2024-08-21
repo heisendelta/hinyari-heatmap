@@ -25,6 +25,9 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
         #map_20271480d38c1b3cc92e7f008ec4dffb {
             position: relative;
             width: 100.0%;
@@ -88,32 +91,48 @@
             border-radius: 0 4px 4px 0;
         }
 
-        /* .side-panel {
+        /* Legend */
+        .legend {
             position: absolute;
-            top: 10%;
-            left: 5%;
-            width: 430px;
-            height: 85%;
-            background-color: rgba(255, 255, 255, 0.9);
-            z-index: 1001;
-            padding: 20px;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-            overflow-y: auto;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+            text-align: center;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            color: black;
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
-        .side-panel h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
+        .gradient-box {
+            height: 20px;
+            background: linear-gradient(to right, green, yellow, red);
+            border-radius: 2px;
+            margin: 5px 0;
         }
-        .side-panel .graph-placeholder {
-            width: 100%;
-            height: 200px;
-            background-color: #e0e0e0;
-            margin-bottom: 20px;
+        .labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
         }
-        .side-panel p {
-            font-size: 16px;
-            line-height: 1.5;
-        } */
+        .labels .label-left,
+        .labels .label-center,
+        .labels .label-right {
+            flex-basis: 33%;
+        }
+        .labels .label-center {
+            text-align: center;
+        }
+
+        .labels .label-left {
+            text-align: left;
+        }
+
+        .labels .label-right {
+            text-align: right;
+        }
     </style>
         
 </head>
@@ -126,9 +145,19 @@
                 <button type="submit" class="search-button">Search</button>
             </form>
         </div>
+        <div class="legend">
+            <b>2024年8月29日</b> 危険度 予測値
+            <div class="gradient-box"></div>
+            <div class="labels">
+                <span class="label-left">低い</span>
+                <!-- <span class="label-center">Medium</span> -->
+                <span class="label-right">高い</span>
+            </div>
+        </div>
         <div id="map">
             <div class="folium-map" id="map_20271480d38c1b3cc92e7f008ec4dffb" ></div>
         </div>
+        
         <!-- <div class="side-panel">
             <h2>Panel Title</h2>
             <div class="graph-placeholder">Graph Placeholder</div>
