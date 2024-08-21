@@ -4,6 +4,8 @@ import base64
 import pandas as pd
 import seaborn as sns
 import pickle
+import matplotlib.colors as mcolors
+import numpy as np
 
 import japanize_matplotlib
 from matplotlib.ticker import MaxNLocator
@@ -13,6 +15,9 @@ matplotlib.use('Agg')
 time_grouped = pd.read_csv('data/time_grouped.csv').set_index('市区町丁')
 with open('data/predict_dicts.pkl', 'rb') as f:
     predict_dicts = pickle.load(f)
+
+proportions = pd.read_csv('data/proportions.csv').set_index('市区町丁')
+crime_types = pd.read_csv('data/crime_types.csv').set_index('市区町丁')
 
 def create_img(fig):
     img = io.BytesIO()
@@ -48,7 +53,6 @@ def case_density_function(region):
     ax.grid(True)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
-    
     return create_img(fig)
 
 def top_n_influenced(region, date, n=3):
@@ -60,3 +64,49 @@ def top_n_influenced(region, date, n=3):
 
     df = df.fillna(0)
     return df[f'2022-{date}'].drop(region, axis=0).nlargest(n).index.to_list()
+
+# Horizontal stacked bar
+def hex_to_rgba(hex_str, alpha=1.0):
+    rgba = mcolors.to_rgba(hex_str, alpha=alpha)
+    return rgba
+
+def horizontal_stacked_bar(region):
+    category_names = crime_types.columns
+    results = proportions.loc[[region]].T.to_dict()
+    results = {k: list(v.values()) for k, v in results.items()}
+
+    labels = list(results.keys())
+    data = np.array(list(results.values()))
+    data_cum = data.cumsum(axis=1)
+    category_colors = ['#EA2027', '#F79F1F', '#009432', '#0652DD', '#12CBC4', '#6F1E51', '#1B1464']
+
+    fig, ax = plt.subplots(figsize=(30, 4))
+    ax.invert_yaxis()
+    ax.xaxis.set_visible(False)
+    ax.set_xlim(0, np.sum(data, axis=1).max())
+
+    for i, (colname, color) in enumerate(zip(category_names, category_colors)):
+        widths = data[:, i]
+        starts = data_cum[:, i] - widths
+        rects = ax.barh(labels, widths, left=starts, height=0.5, label=colname, color=color)
+
+        r, g, b, _ = hex_to_rgba(color)
+        text_color = 'white' if r * g * b < 0.2 else 'darkgrey'
+        for j, (rect, width) in enumerate(zip(rects, widths)):
+            if width > 0:
+                ax.text(rect.get_x() + rect.get_width() / 2, rect.get_y() + rect.get_height() / 2,
+                        f'{crime_types.loc[region, crime_types.columns[i]]}', ha='center', va='center', color=text_color, fontsize=50)
+
+    ax.legend(ncols=len(category_names), bbox_to_anchor=(0, 1), loc='lower left', fontsize=27)
+
+    # ax.set_xlim(0, 1)
+    ax.set_yticks([])
+    ax.set_xticks([])
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    # ax.legend().set_visible(False)
+    plt.tight_layout()
+
+    return create_img(fig)
