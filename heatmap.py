@@ -81,10 +81,11 @@ class HeatmapNode(HeatmapBase):
         neighbor_keys = list(predict_dicts[node].keys())
         df = pd.DataFrame([predict_dicts[node][key] for key in neighbor_keys], index=neighbor_keys, columns=pd.date_range('2022-01-01', periods=365, freq='D').strftime('%Y-%m-%d'))
         df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
-        df = df.apply(lambda x: x ** 10)
+        df = df.apply(lambda x: x ** 8)
         df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
 
         df = df.reset_index(drop=False).rename(columns={ 'index': '市区町丁' })
+        df = df.fillna(0)
 
         self.node = node
         self.colormap = LinearSegmentedColormap.from_list('yellow_to_red', ['#f1c40f', '#e74c3c'])
