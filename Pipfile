@@ -13,6 +13,7 @@ networkx = "*"
 japanize-matplotlib = "*"
 seaborn = "*"
 numpy = "*"
+gunicorn = "*"
 
 [dev-packages]
 
