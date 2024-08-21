@@ -12,6 +12,7 @@ matplotlib = "*"
 networkx = "*"
 japanize-matplotlib = "*"
 seaborn = "*"
+numpy = "*"
 
 [dev-packages]
 
