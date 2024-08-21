@@ -76,5 +76,5 @@ class HeatmapNode(HeatmapBase):
         df = df.reset_index(drop=False).rename(columns={ 'index': '市区町丁' })
 
         self.node = node
-        self.colormap = LinearSegmentedColormap.from_list('white_yellow_blue', ['#f1c40f', '#e74c3c'])
+        self.colormap = LinearSegmentedColormap.from_list('yellow_to_red', ['#f1c40f', '#e74c3c'])
         super().__init__(df, weight_col=weight_col, zoom_start=zoom_start, colormap=self.colormap)
