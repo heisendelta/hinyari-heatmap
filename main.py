@@ -51,7 +51,8 @@ def region_info():
                            map_html=map_html, 
                            date=date, month=month, day=day,
                            graph1_plot_url=case_count_bar_chart(region),
-                           graph2_plot_url=case_density_function(region))
+                           graph2_plot_url=case_density_function(region),
+                           ranking=top_n_influenced(region, date, n=3))
 
 if __name__ == '__main__':
     app.run(debug=True)

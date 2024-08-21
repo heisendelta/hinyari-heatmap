@@ -73,10 +73,18 @@
                 overflow-y: auto;
                 overflow-x: hidden;
                 border-radius: 5px;
+
+                scrollbar-width: none;
+            }
+            .side-panel::-webkit-scrollbar {
+                display: none;
             }
             .side-panel h2 {
                 font-size: 24px;
                 margin-bottom: 20px;
+            }
+            .side-panel h2, h4, p {
+                padding-left: 2.5%;
             }
             /* .side-panel .graph-placeholder {
                 width: 100%;
@@ -84,9 +92,15 @@
                 background-color: #e0e0e0;
                 margin-bottom: 20px;
             } */
-            .side-panel p {
+            .side-panel p, a {
                 font-size: 16px;
                 line-height: 1.5;
+                color: black;
+                text-transform: none;
+                text-decoration: none;
+            }
+            .side-panel a:hover {
+                text-decoration: underline;
             }
             .side-panel img {
                 margin-top: -10%;
@@ -99,7 +113,7 @@
                 position: absolute;
                 bottom: 20px;
                 right: 20px;
-                width: 300px;
+                width: 350px;
                 text-align: center;
                 z-index: 1000;
                 font-family: Arial, sans-serif;
@@ -136,6 +150,15 @@
             .labels .label-right {
                 text-align: right;
             }
+
+            ol {
+                list-style-type: decimal;
+                margin-top: -3%;
+                /* padding-left: 2.5% + 0px; */
+            }
+            ol li {
+                margin-bottom: 8px;
+            }
         </style>
     </head>
     <body>
@@ -151,9 +174,9 @@
                 <b>2024年{{ month }}月{{ day }}日</b> 影響する度
                 <div class="gradient-box"></div>
                 <div class="labels">
-                    <span class="label-left">あまり影響しない</span>
+                    <span class="label-left">あまり影響されない</span>
                     <!-- <span class="label-center">Medium</span> -->
-                    <span class="label-right">かなり影響する</span>
+                    <span class="label-right">かなり影響される</span>
                 </div>
             </div>
             <div id="map">
@@ -163,8 +186,20 @@
                 <h2>{{ region }}</h2>
                 <h4>過去1年のケースの発生時間</h4>
                 <img src="data:image/png;base64,{{ graph1_plot_url }}" alt="Graph 1">
+
                 <h4>1日の合計ケース数</h4>
                 <img src="data:image/png;base64,{{ graph2_plot_url }}" alt="Graph 2">
+
+                <h4>周りの地域に影響するランキング</h4>
+                <ol>
+                    <li><a href="/region_info?region={{ ranking[0] }}&date={{ date }}">{{ ranking[0] }}</a></li>
+                    <li><a href="/region_info?region={{ ranking[1] }}&date={{ date }}">{{ ranking[1] }}</a></li>
+                    <li><a href="/region_info?region={{ ranking[2] }}&date={{ date }}">{{ ranking[2] }}</a></li>
+                </ol>
+
+                <h4>過去の犯罪種類の割合</h4>
+
+
                 <p>This is some placeholder text to give an idea of what the side panel might contain. It can include a summary, analysis, or any other relevant information.</p>
             </div>
         </div>
