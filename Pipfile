@@ -10,6 +10,8 @@ geopandas = "*"
 folium = "*"
 matplotlib = "*"
 networkx = "*"
+japanize-matplotlib = "*"
+seaborn = "*"
 
 [dev-packages]
 
