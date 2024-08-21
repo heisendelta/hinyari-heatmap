@@ -23,7 +23,7 @@ with open('data/predict_dicts.pkl', 'rb') as f:
     predict_dicts = pickle.load(f)
 
 class HeatmapBase:
-    def __init__(self, df, weight_col=None, zoom_start=12, colormap=None):
+    def __init__(self, df, weight_col=None, zoom_start=12, colormap=None, highlight_idx=None):
         self.df = pd.merge(df, subregions[['市区町丁', 'geometry']], on='市区町丁', how='left')
         self.df = self.df[~self.df['geometry'].isna()]
         self.weight_col = weight_col
@@ -35,7 +35,7 @@ class HeatmapBase:
         self.colormap = colormap if colormap is not None else LinearSegmentedColormap.from_list('green_yellow_red', ['green', 'yellow', 'red'])
         # self.m = folium.Map(location=[35.682839, 139.759455], zoom_start=12, tiles='cartodbpositron')
 
-        print(self.centroid)
+        self.highlight_idx = highlight_idx
 
     def render(self):
         if self.weight_col is not None:
@@ -43,22 +43,33 @@ class HeatmapBase:
             # cmap = colormaps.get_cmap('viridis')
             cmap = self.colormap
 
-        for _, row in self.df.iterrows():
+        for i, row in self.df.iterrows():
             if row['geometry'] is not None:
                 if self.weight_col is not None:
                     color = colors.to_hex(cmap(norm(row[self.weight_col])))
                 else:
                     color = '#3186cc'  # Default color when weight_col is None
 
-                folium.GeoJson(
-                    row['geometry'].__geo_interface__,
-                    style_function=lambda _, color=color: {
-                        'fillColor': color,
-                        'color': None,
-                        'weight': 0,
-                        'fillOpacity': 0.7
-                    }
-                ).add_to(self.m)
+                if i == self.highlight_idx:
+                    folium.GeoJson(
+                        row['geometry'].__geo_interface__,
+                        style_function=lambda _, color=color: {
+                            'fillColor': '#0652DD',
+                            'color': '#0097e6',
+                            'weight': 3,
+                            'fillOpacity': 0.7
+                        }
+                    ).add_to(self.m)
+                else:
+                    folium.GeoJson(
+                        row['geometry'].__geo_interface__,
+                        style_function=lambda _, color=color: {
+                            'fillColor': color,
+                            'color': None,
+                            'weight': 0,
+                            'fillOpacity': 0.7
+                        }
+                    ).add_to(self.m)
 
         return self.m
 
@@ -77,4 +88,4 @@ class HeatmapNode(HeatmapBase):
 
         self.node = node
         self.colormap = LinearSegmentedColormap.from_list('yellow_to_red', ['#f1c40f', '#e74c3c'])
-        super().__init__(df, weight_col=weight_col, zoom_start=zoom_start, colormap=self.colormap)
+        super().__init__(df, weight_col=weight_col, zoom_start=zoom_start, colormap=self.colormap, highlight_idx=0)
