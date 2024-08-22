@@ -165,9 +165,9 @@
         <div class="map-container">
             <div class="search-container">
                 <form id="search-form" action="/region_info" method="get">
-                    <input type="text" name="region" class="search-bar" placeholder="Search for a region...">
+                    <input type="text" name="region" class="search-bar" placeholder="区町丁を入力">
                     <input type="date" name="date" class="date-input">
-                    <button type="submit" class="search-button">Search</button>
+                    <button type="submit" class="search-button">検索</button>
                 </form>
             </div>
             <div class="legend">
@@ -187,9 +187,6 @@
                 <h4>過去1年のケースの発生時間</h4>
                 <img src="data:image/png;base64,{{ graph1_plot_url }}" alt="Graph 1">
 
-                <h4>1日の合計ケース数</h4>
-                <img src="data:image/png;base64,{{ graph2_plot_url }}" alt="Graph 2">
-
                 <h4>周りの地域に影響するランキング</h4>
                 <ol>
                     <li><a href="/region_info?region={{ ranking[0] }}&date={{ date }}">{{ ranking[0] }}</a></li>
@@ -199,6 +196,10 @@
 
                 <h4>過去の犯罪種類の割合</h4>
                 <img src="data:image/png;base64,{{ graph3_plot_url }}" alt="Graph 3" style="width: 100%; margin-top: 0%;">
+
+
+                <h4>1日の合計ケース数</h4>
+                <img src="data:image/png;base64,{{ graph2_plot_url }}" alt="Graph 2">
             </div>
         </div>
     </body>
