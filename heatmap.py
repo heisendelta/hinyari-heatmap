@@ -8,6 +8,8 @@ from matplotlib.colors import LinearSegmentedColormap
 import geopandas as gpd
 import pandas as pd
 import pickle
+import numpy as np
+
 
 def convert_kanji_to_num(s):
     if pd.isna(s):
@@ -17,15 +19,18 @@ def convert_kanji_to_num(s):
 subregions = gpd.read_file('data/subregions.geojson')
 subregions = subregions.to_crs(epsg=4326)
 subregions['市区町丁'] = subregions.apply(lambda row: f"{row['CITY_NAME']}{convert_kanji_to_num(row['S_NAME'])}", axis=1)
+influenced_series_df = pd.read_csv('data/influenced_series.csv')
 
 # Get predict_dicts
 with open('data/predict_dicts.pkl', 'rb') as f:
     predict_dicts = pickle.load(f)
 
 class HeatmapBase:
-    def __init__(self, df, weight_col=None, zoom_start=12, colormap=None, highlight_idx=None):
+    def __init__(self, df, weight_col=None, zoom_start=12+1, colormap=None, highlight_idx=None, limit=True):
         self.df = pd.merge(df, subregions[['市区町丁', 'geometry']], on='市区町丁', how='left')
         self.df = self.df[~self.df['geometry'].isna()]
+        if limit:
+            self.df = self.df[self.df['市区町丁'].str.contains('新宿区')]
         self.weight_col = weight_col
         self.zoom_start = zoom_start
 
@@ -79,14 +84,18 @@ class HeatmapBase:
 class HeatmapNode(HeatmapBase):
     def __init__(self, node, weight_col=None, zoom_start=12):
         neighbor_keys = list(predict_dicts[node].keys())
-        df = pd.DataFrame([predict_dicts[node][key] for key in neighbor_keys], index=neighbor_keys, columns=pd.date_range('2022-01-01', periods=365, freq='D').strftime('%Y-%m-%d'))
-        df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
-        df = df.apply(lambda x: x ** 8)
-        df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
+        # df = pd.DataFrame([predict_dicts[node][key] for key in neighbor_keys], index=neighbor_keys, columns=pd.date_range('2022-01-01', periods=365, freq='D').strftime('%Y-%m-%d'))
+        # df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
+        # df = df.apply(lambda x: x ** 8)
+        # df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
 
-        df = df.reset_index(drop=False).rename(columns={ 'index': '市区町丁' })
-        df = df.fillna(0)
+        # df = df.reset_index(drop=False).rename(columns={ 'index': '市区町丁' })
+        # df = df.fillna(0)
+        # print(neighbor_keys)
+
+        df = influenced_series_df[influenced_series_df['市区町丁'].isin(neighbor_keys)]
+        df[weight_col] = np.log(df[weight_col] + 1e-2)
 
         self.node = node
         self.colormap = LinearSegmentedColormap.from_list('yellow_to_red', ['#f1c40f', '#e74c3c'])
-        super().__init__(df, weight_col=weight_col, zoom_start=zoom_start, colormap=self.colormap, highlight_idx=0)
+        super().__init__(df, weight_col=weight_col, zoom_start=zoom_start, colormap=self.colormap, highlight_idx=0, limit=False)

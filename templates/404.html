@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
+    <title>404</title>
     <meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     
@@ -133,20 +133,71 @@
         .labels .label-right {
             text-align: right;
         }
+
+        .centered-box {
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            justify-content: center;
+            align-items: center;
+            width: 75%; /* Make the box 70% of the viewport width */
+            max-width: 620px; /* Set a maximum width */
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0f0f0;
+            border: 4px solid #ddd;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 4001;
+        }
+
+        /* Style for the error message */
+        .error-message {
+            font-size: 1.5em; /* Larger font size */
+            font-weight: bold; /* Bold text */
+            margin-bottom: 10px; /* Space below the error message */
+        }
+
+        /* Style for the list */
+        ul {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove padding */
+        }
+
+        ul li {
+            margin: 5px 0; /* Space between list items */
+        }
     </style>
         
 </head>
 <body>
+
+    <div class="centered-box">
+        <p class="error-message">申し訳ありませんが、このウェブページは存在しません。</p>
+        <p>8月31日から9月2日の間の日付を、以下のリストにある地域から選んでご入力ください。</p>
+        <ul>
+            <li>新宿区新宿４丁目</li>
+            <li>新宿区市谷台町</li>
+            <li>新宿区早稲田町</li>
+            <li>新宿区細工町</li>
+            <li>新宿区新宿３丁目</li>
+            <li>新宿区歌舞伎町２丁目</li>
+            <li>新宿区上落合２丁目</li>
+        </ul>
+    </div>
+
     <div class="map-container">
         <div class="search-container">
             <form id="search-form" action="/region_info" method="get">
-                <input type="text" name="region" class="search-bar" placeholder="Search for a region...">
+                <input type="text" name="region" class="search-bar" placeholder="区町丁を入力">
                 <input type="date" name="date" class="date-input">
-                <button type="submit" class="search-button">Search</button>
+                <button type="submit" class="search-button">検索</button>
             </form>
         </div>
         <div class="legend">
-            <b>2024年8月29日</b> 危険度 予測値
+            <b>2024年1月1日</b> 危険度 予測値
             <div class="gradient-box"></div>
             <div class="labels">
                 <span class="label-left">低い</span>

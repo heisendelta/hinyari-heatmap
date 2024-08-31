@@ -65,10 +65,12 @@
                 top: 10%;
                 left: 4%;
                 width: 400px;
-                height: 85%;
+                /* height: 85%; */
+                height: auto;
                 background-color: rgba(255, 255, 255, 0.9);
                 z-index: 1001;
                 padding: 5px 20px;
+                padding-bottom: 20px;
                 box-shadow: -2px 0 5px rgba(0,0,0,0.3);
                 overflow-y: auto;
                 overflow-x: hidden;
@@ -159,6 +161,8 @@
             ol li {
                 margin-bottom: 8px;
             }
+
+
         </style>
     </head>
     <body>
@@ -171,12 +175,12 @@
                 </form>
             </div>
             <div class="legend">
-                <b>2024年{{ month }}月{{ day }}日</b> 影響する度
+                <b>2024年{{ month }}月{{ day }}日</b> 周辺地域の危険度
                 <div class="gradient-box"></div>
                 <div class="labels">
-                    <span class="label-left">あまり影響されない</span>
+                    <span class="label-left">低</span>
                     <!-- <span class="label-center">Medium</span> -->
-                    <span class="label-right">かなり影響される</span>
+                    <span class="label-right">高</span>
                 </div>
             </div>
             <div id="map">
@@ -184,22 +188,58 @@
             </div>
             <div class="side-panel">
                 <h2>{{ region }}</h2>
+
+                {% if danger_index <= 0.03074196 %}
+                    {% set color = "green" %}
+                    {% set color_name = "低" %}
+                {% elif danger_index <= 0.20789261 %}
+                    {% set color = "darkorange" %}
+                    {% set color_name = "中" %}
+                {% else %}
+                    {% set color = "red" %}
+                    {% set color_name = "高" %}
+                {% endif %}
+
+                <br>
+                選択した地域の危険度は:
+                <div style="text-align: center; margin-top: -9%;">
+                    <h3 style="font-size: 2.7em; color: {{ color }};">
+                        
+                        {{ color_name }}
+                    </h3>
+                    <!-- <p style="font-size: 1.5em; color: {{ color }}; font-weight: normal; margin-top: -7%;">
+                        {{ danger_index }}
+                    </p> -->
+                </div>
+
                 <h4>過去1年のケースの発生時間</h4>
                 <img src="data:image/png;base64,{{ graph1_plot_url }}" alt="Graph 1">
 
-                <h4>周りの地域に影響するランキング</h4>
+                <h4>周辺地域の危険度ランキング</h4>
                 <ol>
                     <li><a href="/region_info?region={{ ranking[0] }}&date={{ date }}">{{ ranking[0] }}</a></li>
                     <li><a href="/region_info?region={{ ranking[1] }}&date={{ date }}">{{ ranking[1] }}</a></li>
                     <li><a href="/region_info?region={{ ranking[2] }}&date={{ date }}">{{ ranking[2] }}</a></li>
                 </ol>
 
-                <h4>過去の犯罪種類の割合</h4>
-                <img src="data:image/png;base64,{{ graph3_plot_url }}" alt="Graph 3" style="width: 100%; margin-top: 0%;">
+                <h4>危険度とは?</h4>
+                <p>選択した地域とその周辺の予測データと平均値とのさを表したものです。</p>
+
+                
+
+                <!-- <h4>周りの地域に影響するランキング</h4>
+                <ol>
+                    <li><a href="/region_info?region={{ ranking[0] }}&date={{ date }}">{{ ranking[0] }}</a></li>
+                    <li><a href="/region_info?region={{ ranking[1] }}&date={{ date }}">{{ ranking[1] }}</a></li>
+                    <li><a href="/region_info?region={{ ranking[2] }}&date={{ date }}">{{ ranking[2] }}</a></li>
+                </ol> -->
+
+                <!-- <h4>過去1年の犯罪種類の割合</h4>
+                <img src="data:image/png;base64,{{ graph3_plot_url }}" alt="Graph 3" style="width: 100%; margin-top: 0%;"> -->
 
 
-                <h4>1日の合計ケース数</h4>
-                <img src="data:image/png;base64,{{ graph2_plot_url }}" alt="Graph 2">
+                <!-- <h4>1日の合計ケース数</h4>
+                <img src="data:image/png;base64,{{ graph2_plot_url }}" alt="Graph 2"> -->
             </div>
         </div>
     </body>

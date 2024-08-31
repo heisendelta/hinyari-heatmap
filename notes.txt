@@ -1,7 +1,18 @@
-- highlight the selected region in region_info/
-- gradient for meaning behind red-yellow colors
-- KDE for time groups
-- ranking for top n most influenced regions (w/ respect to searched region)
+x standardize the font
+x highlight the selected region in region_info/
+x gradient for meaning behind red-yellow colors
+x KDE for time groups
+x ranking for top n most influenced regions (w/ respect to searched region)
+x change architecture so redirects to whole map
+- number and proportion of crime types
 
 - hosting on pythonanywhere.com
 - English translation
+
+- add something that says 危険度 of a region
+- take the average of the numbers of cases of a region (with three neighbor distances from the selected region)
+- remove all the text relating to 影響度
+- remove the 周りの地域に影響する
+- change the numbers of cases to a bar graph (make the text more legible)
+- mention that it's from 2022
+- make the labeling for the density chart easier? or just remove it outright (better to make things explainable)

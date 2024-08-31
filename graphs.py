@@ -16,6 +16,9 @@ time_grouped = pd.read_csv('data/time_grouped.csv').set_index('市区町丁')
 with open('data/predict_dicts.pkl', 'rb') as f:
     predict_dicts = pickle.load(f)
 
+danger_indices_normalized = pd.read_csv('data/danger_indices.csv')
+danger_indices_normalized = danger_indices_normalized.set_index('市区町丁')
+
 proportions = pd.read_csv('data/proportions.csv').set_index('市区町丁')
 crime_types = pd.read_csv('data/crime_types.csv').set_index('市区町丁')
 
@@ -57,13 +60,14 @@ def case_density_function(region):
 
 def top_n_influenced(region, date, n=3):
     neighbor_keys = list(predict_dicts[region].keys())
-    df = pd.DataFrame([predict_dicts[region][key] for key in neighbor_keys], index=neighbor_keys, columns=pd.date_range('2022-01-01', periods=365, freq='D').strftime('%Y-%m-%d'))
-    df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
-    df = df.apply(lambda x: x ** 10)
-    df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
+    # df = pd.DataFrame([predict_dicts[region][key] for key in neighbor_keys], index=neighbor_keys, columns=pd.date_range('2022-01-01', periods=365, freq='D').strftime('%Y-%m-%d'))
+    # df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
+    # df = df.apply(lambda x: x ** 10)
+    # df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=1)
 
-    df = df.fillna(0)
-    return df[f'2022-{date}'].drop(region, axis=0).nlargest(n).index.to_list()
+    # df = df.fillna(0)
+    # return df[f'2022-{date}'].drop(region, axis=0).nlargest(n).index.to_list()
+    return danger_indices_normalized.loc[neighbor_keys][f'2022-{date}'].nlargest(n).index.to_list()
 
 # Horizontal stacked bar
 def hex_to_rgba(hex_str, alpha=1.0):
