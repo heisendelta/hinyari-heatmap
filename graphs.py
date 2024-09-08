@@ -67,7 +67,8 @@ def top_n_influenced(region, date, n=3):
 
     # df = df.fillna(0)
     # return df[f'2022-{date}'].drop(region, axis=0).nlargest(n).index.to_list()
-    return danger_indices_normalized.loc[neighbor_keys][f'2022-{date}'].nlargest(n).index.to_list()
+
+    return danger_indices_normalized.loc[neighbor_keys][f'2022-{date}'].drop(region, axis=0).nlargest(n).index.to_list() # Drops region
 
 # Horizontal stacked bar
 def hex_to_rgba(hex_str, alpha=1.0):

@@ -95,7 +95,8 @@ class HeatmapNode(HeatmapBase):
 
         df = influenced_series_df[influenced_series_df['市区町丁'].isin(neighbor_keys)]
         df[weight_col] = np.log(df[weight_col] + 1e-2)
+        highlight_idx = df.reset_index(drop=True).index[df['市区町丁'] == node].tolist()[0]
 
         self.node = node
         self.colormap = LinearSegmentedColormap.from_list('yellow_to_red', ['#f1c40f', '#e74c3c'])
-        super().__init__(df, weight_col=weight_col, zoom_start=zoom_start, colormap=self.colormap, highlight_idx=0, limit=False)
+        super().__init__(df, weight_col=weight_col, zoom_start=zoom_start, colormap=self.colormap, highlight_idx=highlight_idx, limit=False)
