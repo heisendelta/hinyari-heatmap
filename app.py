@@ -26,7 +26,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    # return render_template('index.html')
     return redirect(url_for('info', date=datetime.today().strftime('%m-%d'))) # redirects to today's date
 
 @app.route('/info')
